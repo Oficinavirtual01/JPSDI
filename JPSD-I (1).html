@@ -1,0 +1,543 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Análisis Estadístico Delictual de JPSD I</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; }
+        .container { max-width: 800px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .header { background-color: #1565c0; color: white; padding: 10px; font-size: 14px; font-weight: bold; margin-bottom: 20px; text-align: center; }
+        .chart-container { width: 100%; min-height: 300px; margin-bottom: 20px; }
+        h1 { font-size: 20px; text-align: center; color: #333; }
+        h2 { font-size: 18px; margin-top: 25px; text-align: center; color: #333; }
+        p { text-align: center; color: #555; }
+        .date-range { color: #555; margin-bottom: 30px; }
+        
+        /* Ajuste para centrar el resumen */
+        .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; justify-content: center; }
+        .summary-box { border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9; text-align: center;}
+        
+        .summary-title { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        .summary-value { font-size: 14px; }
+        .variation { font-weight: bold; margin-top: 10px; }
+        .variation-up { color: #d32f2f; }
+        .variation-down { color: #388e3c; }
+        .variation-stable { color: #757575; }
+        .table-container { overflow-x: auto; margin-bottom: 25px; }
+        
+        /* Ajuste para tablas más compactas */
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        th, td { border: 1px solid #ddd; padding: 5px; text-align: left; font-size: 11px; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        tbody tr:hover { background-color: #e0f2f1; cursor: pointer; }
+        .conclusion { font-style: italic; color: #555; text-align: center; padding: 10px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; margin-top: 10px; font-size: 14px; }
+        .conclusion strong { color: #1565c0; }
+        .footer { font-size: 10px; color: #777; margin-top: 40px; }
+        
+        /* Lógica Termográfica */
+        .muy-caliente { background-color: #f44336; color: white; font-weight: bold; }
+        .caliente { background-color: #ff9800; color: white; font-weight: bold; }
+        .frio { background-color: #48b8d4; color: white; font-weight: bold; }
+        .neutro { background-color: #ffeb3b; font-weight: bold; }
+
+        /* Media query para móviles */
+        @media (max-width: 600px) {
+          .summary-grid { grid-template-columns: 1fr; }
+          h1 { font-size: 16px; }
+          .container { padding: 10px; }
+          .chart-container { min-height: 250px; }
+          th, td { padding: 4px; font-size: 10px; }
+        }
+      </style>
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <script type="text/javascript">
+        // Se define el texto del período dinámicamente
+        const periodoTexto = 'Quincena';
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawAllCharts);
+
+        function drawAllCharts() {
+          drawChartDelitos();
+          drawChartDias();
+          drawChartHorario();
+          drawChartDependencias();
+          drawChartLugares();
+        }
+
+        function drawChartDelitos() {
+          var data = google.visualization.arrayToDataTable([
+            ['Categoría', periodoTexto + ' 1', periodoTexto + ' 2'],
+            ['Otro - cuatri/mono patín', 5, 2],
+['Bicicleta', 8, 5],
+['Moto', 18, 13],
+['Auto/camioneta', 17, 13],
+['Ninguno', 74, 62],
+['Moto, Bicicleta, Otro - cuatri/mono patín', 0, 1]
+          ]);
+          var options = {
+            title: 'Análisis estadístico de los Delitos',
+            titleTextStyle: { fontSize: 16 },
+            legend: { position: 'top' },
+            colors: ['#1565c0', '#42a5f5'],
+            hAxis: { minValue: 0 },
+            bar: { groupWidth: '80%' }
+          };
+          var chart = new google.visualization.BarChart(document.getElementById('chart_delitos'));
+          chart.draw(data, options);
+        }
+
+        function drawChartDias() {
+          var data = google.visualization.arrayToDataTable([
+            ['Categoría', periodoTexto + ' 1', periodoTexto + ' 2'],
+            ['Martes', 25, 14],
+['Jueves', 12, 7],
+['Viernes', 18, 11],
+['Domingo', 17, 11],
+['Lunes', 19, 17],
+['Sábado', 14, 15],
+['Miércoles', 17, 21]
+          ]);
+          var options = {
+            title: 'Análisis por Día de la Semana',
+            titleTextStyle: { fontSize: 16 },
+            legend: { position: 'top' },
+            colors: ['#388e3c', '#81c784'],
+            curveType: 'function'
+          };
+          var chart = new google.visualization.LineChart(document.getElementById('chart_dias'));
+          chart.draw(data, options);
+        }
+
+        function drawChartHorario() {
+          var data = google.visualization.arrayToDataTable([
+            ['Categoría', periodoTexto + ' 1', periodoTexto + ' 2'],
+            ['☀️ Tarde (12:00 - 17:59)', 34, 15],
+['🌆 Noche (18:00 - 23:59)', 41, 36],
+['🌙 Madrugada (00:00 - 05:59)', 21, 20],
+['🌤️ Mañana (06:00 - 11:59)', 26, 25]
+          ]);
+          var options = {
+            title: 'Análisis por Rango Horario',
+            titleTextStyle: { fontSize: 16 },
+            legend: { position: 'top' },
+            colors: ['#ff8f00', '#ffb300'],
+            isStacked: true,
+            vAxis: { minValue: 0 },
+            bar: { groupWidth: '80%' }
+          };
+          var chart = new google.visualization.ColumnChart(document.getElementById('chart_horario'));
+          chart.draw(data, options);
+        }
+
+        function drawChartDependencias() {
+          var data = google.visualization.arrayToDataTable([
+            ['Categoría', periodoTexto + ' 1', periodoTexto + ' 2'],
+            ['Cria_37', 9, 3],
+['Cria__3', 9, 3],
+['Cria__5', 18, 6],
+['Cria__4', 16, 8],
+['SC_ZIM', 4, 2],
+['Cria__1', 7, 4],
+['Cria_40', 15, 12],
+['Cria_34', 11, 9],
+['Cria_33', 7, 6],
+['Cria_59', 4, 4],
+['Cria__2', 4, 4],
+['SC_GB', 3, 4],
+['Cria__6', 3, 5],
+['Cria_52', 4, 7],
+['Cria_27', 3, 6],
+['Cria__7', 4, 9],
+['Cria_50', 1, 4]
+          ]);
+          var options = {
+            title: 'Análisis por Dependencia',
+            titleTextStyle: { fontSize: 16 },
+            legend: { position: 'top' },
+            colors: ['#d32f2f', '#e57373'],
+            hAxis: { minValue: 0 },
+            bar: { groupWidth: '80%' }
+          };
+          var chart = new google.visualization.BarChart(document.getElementById('chart_dependencias'));
+          chart.draw(data, options);
+        }
+        
+        function drawChartLugares() {
+          var data = google.visualization.arrayToDataTable([
+            ['Categoría', periodoTexto + ' 1', periodoTexto + ' 2'],
+            ['Interior taxi, Remis', 4, 0],
+['Entidad Bancaria', 1, 0],
+['Vía Pública', 69, 52],
+['Comercio', 19, 15],
+['Domicilio', 29, 26],
+['Establecimiento Educativo', 0, 2],
+['Interior Transporte Publico', 0, 1]
+          ]);
+          var options = {
+            title: 'Análisis por Tipo de Lugar',
+            titleTextStyle: { fontSize: 16 },
+            legend: { position: 'top' },
+            colors: ['#6a1b9a', '#9575cd'],
+            hAxis: { minValue: 0 },
+            bar: { groupWidth: '80%' }
+          };
+          var chart = new google.visualization.BarChart(document.getElementById('chart_lugares'));
+          chart.draw(data, options);
+        }
+      </script>
+    </head>
+    <body>
+      <div class="container">
+        <h1>Análisis Estadístico Delictual de JPSD I</h1>
+        <h2>📅 COMPARATIVA DE QUINCENA</h2>
+        <p class="date-range">Quincena del 6/7/2025 al 20/7/2025 Vs. Quincena del 21/7/2025 al 4/8/2025</p>
+        
+        
+    <div class="summary-grid">
+      <div class="summary-box">
+        <div class="summary-title">Total Delitos</div>
+        <div class="summary-value">Quincena 1: 122 | Quincena 2: 96</div>
+        <div class="variation variation-down">▼ 21% (-26)</div>
+      </div>
+  
+    <div class="summary-box">
+      <div class="summary-title">Estabilidad del Delito</div>
+      <div class="summary-value">Quincena 2</div>
+      <div class="variation">Media</div>
+    </div>
+  
+      <div class="summary-box">
+        <div class="summary-title">Capital</div>
+        <div class="summary-value">Quincena 1: 48 | Quincena 2: 29</div>
+        <div class="variation variation-down">▼ 40% (-19)</div>
+      </div>
+      <div class="summary-box">
+        <div class="summary-title">Godoy Cruz</div>
+        <div class="summary-value">Quincena 1: 54 | Quincena 2: 56</div>
+        <div class="variation variation-up">▲ 4% (+2)</div>
+      </div>
+    </div>
+        
+        
+    <div class="header">📊 ANÁLISIS POR TIPO DE DELITO</div>
+    <div id="chart_delitos" class="chart-container"></div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Quincena 1</th>
+            <th>Quincena 2</th>
+            <th>📊 Variación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <td>Otro - cuatri/mono patín</td>
+              <td>5</td>
+              <td>2</td>
+              <td class="frio">▼ 60% (-3)</td>
+            </tr><tr>
+              <td>Bicicleta</td>
+              <td>8</td>
+              <td>5</td>
+              <td class="frio">▼ 38% (-3)</td>
+            </tr><tr>
+              <td>Moto</td>
+              <td>18</td>
+              <td>13</td>
+              <td class="frio">▼ 28% (-5)</td>
+            </tr><tr>
+              <td>Auto/camioneta</td>
+              <td>17</td>
+              <td>13</td>
+              <td class="frio">▼ 24% (-4)</td>
+            </tr><tr>
+              <td>Ninguno</td>
+              <td>74</td>
+              <td>62</td>
+              <td class="neutro">▼ 16% (-12)</td>
+            </tr><tr>
+              <td>Moto, Bicicleta, Otro - cuatri/mono patín</td>
+              <td>0</td>
+              <td>1</td>
+              <td class="caliente">▲ ∞ (+1)</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="conclusion">El análisis de delitos muestra una tendencia ▼ 21%. El mayor aumento de hechos se registró en <strong>Moto, Bicicleta, Otro - cuatri/mono patín (▲ ∞ (+1))</strong>. Mientras que la mayor disminución fue en <strong>Otro - cuatri/mono patín (▼ 60% (-3))</strong>.</div>
+  
+        
+    <div class="header">📅 ANÁLISIS POR DÍA DE LA SEMANA</div>
+    <div id="chart_dias" class="chart-container"></div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Quincena 1</th>
+            <th>Quincena 2</th>
+            <th>📊 Variación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <td>Martes</td>
+              <td>25</td>
+              <td>14</td>
+              <td class="frio">▼ 44% (-11)</td>
+            </tr><tr>
+              <td>Jueves</td>
+              <td>12</td>
+              <td>7</td>
+              <td class="frio">▼ 42% (-5)</td>
+            </tr><tr>
+              <td>Viernes</td>
+              <td>18</td>
+              <td>11</td>
+              <td class="frio">▼ 39% (-7)</td>
+            </tr><tr>
+              <td>Domingo</td>
+              <td>17</td>
+              <td>11</td>
+              <td class="frio">▼ 35% (-6)</td>
+            </tr><tr>
+              <td>Lunes</td>
+              <td>19</td>
+              <td>17</td>
+              <td class="neutro">▼ 11% (-2)</td>
+            </tr><tr>
+              <td>Sábado</td>
+              <td>14</td>
+              <td>15</td>
+              <td class="caliente">▲ 7% (+1)</td>
+            </tr><tr>
+              <td>Miércoles</td>
+              <td>17</td>
+              <td>21</td>
+              <td class="muy-caliente">▲ 24% (+4)</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="conclusion">El análisis de días de la semana muestra una tendencia ▼ 21%. El mayor aumento de hechos se registró en <strong>Miércoles (▲ 24% (+4))</strong>. Mientras que la mayor disminución fue en <strong>Martes (▼ 44% (-11))</strong>.</div>
+  
+        
+    <div class="header">🕒 ANÁLISIS POR RANGO HORARIO</div>
+    <div id="chart_horario" class="chart-container"></div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Quincena 1</th>
+            <th>Quincena 2</th>
+            <th>📊 Variación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <td>☀️ Tarde (12:00 - 17:59)</td>
+              <td>34</td>
+              <td>15</td>
+              <td class="frio">▼ 56% (-19)</td>
+            </tr><tr>
+              <td>🌆 Noche (18:00 - 23:59)</td>
+              <td>41</td>
+              <td>36</td>
+              <td class="neutro">▼ 12% (-5)</td>
+            </tr><tr>
+              <td>🌙 Madrugada (00:00 - 05:59)</td>
+              <td>21</td>
+              <td>20</td>
+              <td class="neutro">▼ 5% (-1)</td>
+            </tr><tr>
+              <td>🌤️ Mañana (06:00 - 11:59)</td>
+              <td>26</td>
+              <td>25</td>
+              <td class="neutro">▼ 4% (-1)</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="conclusion">El análisis de rangos horarios muestra una tendencia ▼ 21%. Mientras que la mayor disminución fue en <strong>☀️ Tarde (12:00 - 17:59) (▼ 56% (-19))</strong>.</div>
+  
+        
+    <div class="header">📍 ANÁLISIS POR DEPENDENCIA</div>
+    <div id="chart_dependencias" class="chart-container"></div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Quincena 1</th>
+            <th>Quincena 2</th>
+            <th>📊 Variación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <td>Cria_37</td>
+              <td>9</td>
+              <td>3</td>
+              <td class="frio">▼ 67% (-6)</td>
+            </tr><tr>
+              <td>Cria__3</td>
+              <td>9</td>
+              <td>3</td>
+              <td class="frio">▼ 67% (-6)</td>
+            </tr><tr>
+              <td>Cria__5</td>
+              <td>18</td>
+              <td>6</td>
+              <td class="frio">▼ 67% (-12)</td>
+            </tr><tr>
+              <td>Cria__4</td>
+              <td>16</td>
+              <td>8</td>
+              <td class="frio">▼ 50% (-8)</td>
+            </tr><tr>
+              <td>SC_ZIM</td>
+              <td>4</td>
+              <td>2</td>
+              <td class="frio">▼ 50% (-2)</td>
+            </tr><tr>
+              <td>Cria__1</td>
+              <td>7</td>
+              <td>4</td>
+              <td class="frio">▼ 43% (-3)</td>
+            </tr><tr>
+              <td>Cria_40</td>
+              <td>15</td>
+              <td>12</td>
+              <td class="neutro">▼ 20% (-3)</td>
+            </tr><tr>
+              <td>Cria_34</td>
+              <td>11</td>
+              <td>9</td>
+              <td class="neutro">▼ 18% (-2)</td>
+            </tr><tr>
+              <td>Cria_33</td>
+              <td>7</td>
+              <td>6</td>
+              <td class="neutro">▼ 14% (-1)</td>
+            </tr><tr>
+              <td>Cria_59</td>
+              <td>4</td>
+              <td>4</td>
+              <td class="neutro">· 0% (0)</td>
+            </tr><tr>
+              <td>Cria__2</td>
+              <td>4</td>
+              <td>4</td>
+              <td class="neutro">· 0% (0)</td>
+            </tr><tr>
+              <td>SC_GB</td>
+              <td>3</td>
+              <td>4</td>
+              <td class="caliente">▲ 33% (+1)</td>
+            </tr><tr>
+              <td>Cria__6</td>
+              <td>3</td>
+              <td>5</td>
+              <td class="caliente">▲ 67% (+2)</td>
+            </tr><tr>
+              <td>Cria_52</td>
+              <td>4</td>
+              <td>7</td>
+              <td class="caliente">▲ 75% (+3)</td>
+            </tr><tr>
+              <td>Cria_27</td>
+              <td>3</td>
+              <td>6</td>
+              <td class="caliente">▲ 100% (+3)</td>
+            </tr><tr>
+              <td>Cria__7</td>
+              <td>4</td>
+              <td>9</td>
+              <td class="caliente">▲ 125% (+5)</td>
+            </tr><tr>
+              <td>Cria_50</td>
+              <td>1</td>
+              <td>4</td>
+              <td class="caliente">▲ 300% (+3)</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="conclusion">El análisis de dependencias muestra una tendencia ▼ 21%. El mayor aumento de hechos se registró en <strong>Cria_50 (▲ 300% (+3))</strong>. Mientras que la mayor disminución fue en <strong>Cria_37 (▼ 67% (-6))</strong>.</div>
+  
+        
+    <div class="header">🏠 ANÁLISIS POR TIPO DE LUGAR</div>
+    <div id="chart_lugares" class="chart-container"></div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Quincena 1</th>
+            <th>Quincena 2</th>
+            <th>📊 Variación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <td>Interior taxi, Remis</td>
+              <td>4</td>
+              <td>0</td>
+              <td class="frio">▼ 100% (-4)</td>
+            </tr><tr>
+              <td>Entidad Bancaria</td>
+              <td>1</td>
+              <td>0</td>
+              <td class="frio">▼ 100% (-1)</td>
+            </tr><tr>
+              <td>Vía Pública</td>
+              <td>69</td>
+              <td>52</td>
+              <td class="frio">▼ 25% (-17)</td>
+            </tr><tr>
+              <td>Comercio</td>
+              <td>19</td>
+              <td>15</td>
+              <td class="frio">▼ 21% (-4)</td>
+            </tr><tr>
+              <td>Domicilio</td>
+              <td>29</td>
+              <td>26</td>
+              <td class="neutro">▼ 10% (-3)</td>
+            </tr><tr>
+              <td>Establecimiento Educativo</td>
+              <td>0</td>
+              <td>2</td>
+              <td class="caliente">▲ ∞ (+2)</td>
+            </tr><tr>
+              <td>Interior Transporte Publico</td>
+              <td>0</td>
+              <td>1</td>
+              <td class="caliente">▲ ∞ (+1)</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="conclusion">El análisis de tipos de lugar muestra una tendencia ▼ 21%. El mayor aumento de hechos se registró en <strong>Establecimiento Educativo (▲ ∞ (+2))</strong>. Mientras que la mayor disminución fue en <strong>Interior taxi, Remis (▼ 100% (-4))</strong>.</div>
+  
+
+        <hr style="border: 1px solid #eee;">
+        <div class="conclusion">
+          <p><strong>🏁 CONCLUSIÓN GENERAL:</strong> En conclusión, el período muestra un **disminución (▼ 21% (-26))** en la totalidad de hechos delictivos. Se recomienda prestar especial atención a las tendencias identificadas en los análisis detallados.</p>
+        </div>
+
+        <div class="footer">
+          <p>📌 Fuente: Hechos delictivos Reales constatados con intervención directa de efectivos policiales, y cargados al S.A.T. (Sistema de Alerta Temprana) - JPSD I</p>
+          <p>📎 Of. Virtual de análisis estadístico delictivo y operacional</p>
+          <p>👤 Of. Ppal. Lic. González Sebastian</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  
